@@ -1,4 +1,4 @@
-name: Build and Deploy to Azure
+name: Build and Deploy
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build_and_deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,21 +18,20 @@ jobs:
       with:
         node-version: '14'
 
-    - name: Install Dependencies
+    - name: Install server dependencies
       run: npm install
       working-directory: ./Node/WEB
 
-    # Conditionally run build if script exists
-    - name: Run Build if Script Exists
+    - name: Install frontend dependencies and build
       run: |
-        if npm run | grep -q build; then
-          npm run build
-        fi
+        cd frontend
+        npm install
+        npm run build
       working-directory: ./Node/WEB
 
     - name: Deploy to Azure
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'yuhe'
+        app-name: 'yuheb'
         publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-        package: './Node/WEB'
+        package: ./Node/WEB  # or the directory containing your built application
