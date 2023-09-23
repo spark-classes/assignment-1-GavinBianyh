@@ -37,6 +37,6 @@ jobs:
     - name: Deploy to Azure
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'yuheb-web-app'
+        app-name: 'yuheb-web'
         publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
         package: Node/WEB  # directory to be deployed
