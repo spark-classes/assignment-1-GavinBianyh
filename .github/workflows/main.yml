@@ -26,7 +26,7 @@ jobs:
         cd WEB  # Navigate to your WEB directory (frontend)
         npm install
         npm run build
-      working-directory: ./Node  # This should navigate to the directory containing WEB
+      working-directory: ./Node/WEB  # This should navigate to the directory containing WEB
 
     # Install dependencies for the backend (Express)
     - name: Install Backend Dependencies
