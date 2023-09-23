@@ -1,37 +1,43 @@
-name: Build and Deploy
+name: Build and Deploy to Azure
 
 on:
   push:
     branches:
-      - main
+      - main  # Trigger this workflow on push to the main branch
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
+    # Checkout the codebase
     - name: Checkout code
       uses: actions/checkout@v2
 
+    # Setup Node.js environment
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '14'  # Use Node.js version 14
 
-    - name: Install server dependencies
-      run: npm install
-      working-directory: ./Node/WEB
-
-    - name: Install frontend dependencies and build
+    # Install and build the frontend
+    - name: Build Frontend
       run: |
-        cd frontend
+        cd WEB  # Navigate to your WEB directory (frontend)
         npm install
         npm run build
-      working-directory: ./Node/WEB
+      working-directory: ./Node  # This should navigate to the directory containing WEB
 
+    # Install dependencies for the backend (Express)
+    - name: Install Backend Dependencies
+      run: npm install
+      working-directory: ./Node/WEB  # This should be the directory containing your backend code
+
+    # Deploy to Azure
     - name: Deploy to Azure
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'yuhe'
-        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-        package: ./Node/WEB  # or the directory containing your built application
+        app-name: 'yuhe'  # Replace this with your actual Azure App Service name
+        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}  # Replace with your Azure publish profile secret name
+        package: './Node/WEB'  # This should be the directory containing your built application
+
