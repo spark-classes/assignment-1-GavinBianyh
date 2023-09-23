@@ -1,12 +1,12 @@
-name: Deploy Node Web App to Azure
+name: Build and Deploy
 
 on:
   push:
     branches:
-      - main  # or your default branch name
+      - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: windows-latest
 
     steps:
@@ -16,27 +16,22 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'  # use the Node.js version you want
+        node-version: '14'
 
-    - name: Install Dependencies
+    - name: Install server dependencies
+      run: npm install
+      working-directory: ./Node/WEB
+
+    - name: Install frontend dependencies and build
       run: |
-        cd Node/WEB
+        cd frontend
         npm install
-
-    - name: Build project  # only if you need to build your frontend
-      run: |
-        cd Node/WEB/frontend
-        npm install  # if you have separate package.json for frontend
-        npm run build  # or your build command
-
-    - name: Login to Azure
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        npm run build
+      working-directory: ./Node/WEB
 
     - name: Deploy to Azure
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'yuheb-web'
         publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-        package: Node/WEB  # directory to be deployed
+        package: ./Node/WEB  # or the directory containing your built application
