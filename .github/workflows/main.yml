@@ -41,6 +41,3 @@ jobs:
         publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
         package: Node/WEB  # directory to be deployed
 
-        app-name: 'yuheb'
-        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-        package: ./Node/WEB  # or the directory containing your built application
