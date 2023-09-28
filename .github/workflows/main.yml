@@ -5,7 +5,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: yuheb-new   # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: './WEB'      # set this to the path to your web app project
+  AZURE_WEBAPP_PACKAGE_PATH: './Node/WEB'      # set this to the path to your web app project
   NODE_VERSION: '18'                      # set this to the node version to use
 
 jobs:
