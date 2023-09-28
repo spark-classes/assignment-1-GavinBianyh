@@ -26,6 +26,12 @@ jobs:
         npm install
         npm run build --if-present
         npm run test --if-present
+    - name: Install Dependencies
+      run: |
+        npm install --no-package-lock
+        npm run build --if-present
+        npm run test --if-present
+      working-directory: ./Node/WEB
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
