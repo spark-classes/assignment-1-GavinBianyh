@@ -13,17 +13,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1
       with:
-        node-version: '18'  # use the Node.js version you want
+        dotnet-version: '7.0'  # update to your version
     
     - name: Build Project
-      run: dotnet build --configuration Release ./C_Sharp/WEB/WEB.csproj
+      run: dotnet build --configuration Release ./C_Sharp/WEB
       
     - name: Publish Project
-      run: dotnet publish -c Release -o ./published ./C_Sharp/WEB/WEB.csproj
-    
+      run: dotnet publish -c Release -o ./published ./C_Sharp/WEB
     - name: Deploy to Azure
       uses: azure/webapps-deploy@v2
       with:
