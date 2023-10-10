@@ -1,6 +1,7 @@
 name: Deploy API1 to Azure Function
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
