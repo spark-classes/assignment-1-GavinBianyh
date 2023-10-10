@@ -1,0 +1,33 @@
+name: Deploy API1 to Azure Function
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'C_Sharp/API1/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest 
+
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v2
+      
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.x' 
+    - name: Build with dotnet
+      run: dotnet build C_Sharp/API1/API1.csproj --configuration Release
+      
+    - name: Publish with dotnet
+      run: dotnet publish C_Sharp/API1/API1.csproj --configuration Release --output ./C_Sharp/API1/published
+      
+    - name: 'Deploy to Azure Function App'
+      uses: Azure/functions-action@v1
+      with:
+        app-name: 'A2-API1' 
+        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+        package: './C_Sharp/API1/published' 
