@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main  # change to your branch
+    paths:
+      - 'C_Sharp/WEB/**'
 
 jobs:
   build-and-deploy:
