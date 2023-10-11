@@ -21,10 +21,10 @@ jobs:
       with:
         dotnet-version: '6.x' 
     - name: Build with dotnet
-      run: dotnet build C_Sharp/API1 --configuration Release
+      run: dotnet build C_Sharp/API1/API1.csproj --configuration Release
       
     - name: Publish with dotnet
-      run: dotnet publish C_Sharp/API1 --configuration Release --output ./C_Sharp/API1/published
+      run: dotnet publish C_Sharp/API1/API1.csproj --configuration Release --output ./C_Sharp/API1/published
       
     - name: 'Deploy to Azure Function App'
       uses: Azure/functions-action@v1
