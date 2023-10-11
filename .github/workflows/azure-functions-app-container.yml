@@ -27,7 +27,7 @@ jobs:
       with:
         appSourcePath: ${{ github.workspace }}/C_Sharp/API2
         acrName: api2reginame
-        containerAppName: a2api2containernew
+        containerAppName: newcontainer-api2
         resourceGroup: 519fall2023-project-BIAN
 
     
