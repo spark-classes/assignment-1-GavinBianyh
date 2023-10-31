@@ -19,6 +19,19 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
+
+app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.MapBlazorHub();
+app.MapFallbackToPage("/_Host");
+
+app.Run();
+
 public class ApiController : Controller
 {
     private readonly IConfiguration _configuration;
@@ -35,14 +48,3 @@ public class ApiController : Controller
         return Content($"Hello, world! This is : {secretValue}");
     }
 }
-
-app.UseHttpsRedirection();
-
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
-
-app.Run();
