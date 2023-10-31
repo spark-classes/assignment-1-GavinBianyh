@@ -19,6 +19,23 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+public class ApiController : Controller
+{
+    private readonly IConfiguration _configuration;
+
+    public ApiController(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
+    [HttpGet("/api")]
+    public IActionResult GetSecret()
+    {
+        var secretValue = _configuration["keybyh"];
+        return Content($"Hello, world! This is : {secretValue}");
+    }
+}
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
