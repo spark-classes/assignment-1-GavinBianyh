@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using WEB.Data;
+using Microsoft.Extensions.Configuration
+using Microsoft.AspNetCore.Mvc
+
 
 var builder = WebApplication.CreateBuilder(args);
 
