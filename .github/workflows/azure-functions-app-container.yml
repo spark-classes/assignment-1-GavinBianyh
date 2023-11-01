@@ -21,6 +21,9 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: 'Set Environment Variables'
+      run: |
+        echo "AZURE_STORAGE_CONNECTION_STRING=${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" >> $GITHUB_ENV
 
     - name: Build and deploy Container App
       uses: azure/container-apps-deploy-action@v1
