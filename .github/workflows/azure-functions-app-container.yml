@@ -8,26 +8,19 @@ on:
       - 'C_Sharp/API2/**'
   workflow_dispatch:
 
+
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
-    environment: dev
-    steps:
+   runs-on: ubuntu-latest
+   environment: dev
+   steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v3
 
-    - name: Clean .NET project
-      run: |
-        dotnet restore C_Sharp/API2/API2.csproj
-        dotnet clean C_Sharp/API2/API2.csproj --configuration Release
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: 'Set Environment Variables'
-      run: |
-        echo "AZURE_STORAGE_CONNECTION_STRING=${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" >> $GITHUB_ENV
 
     - name: Build and deploy Container App
       uses: azure/container-apps-deploy-action@v1
@@ -36,3 +29,5 @@ jobs:
         acrName: api2reginame
         containerAppName: newcontainer-api2
         resourceGroup: 519fall2023-project-BIAN
+        environmentVariables: |
+          StorageQueueUrl=https://cs210032002f776443c.queue.core.windows.net/api1queue
