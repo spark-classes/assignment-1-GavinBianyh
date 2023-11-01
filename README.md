@@ -14,3 +14,9 @@ this for deploying the API1 folder in to AZURE function APP
 main.yml
 
 this for deploying the WEB folder to AZURE WEB APP
+
+
+We update Program.cs file to Configure the web app to securely read a secret from the KV
+
+We update test1.cs to Configure the function app to securely read a secret from the KV and  insert an item into a storage queue. 
+
