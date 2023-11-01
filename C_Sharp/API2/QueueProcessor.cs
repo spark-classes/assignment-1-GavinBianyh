@@ -9,7 +9,7 @@ namespace API2
 
 
         [FunctionName("QueueProcessor")]
-        public void Run([QueueTrigger("api1queue", Connection = "AzureWebJobsStorage")]string myQueueItem, ILogger log)
+        public void Run([QueueTrigger("api1queue", Connection = "newsetting")]string myQueueItem, ILogger log)
         {
             var client = new SecretClient(new Uri(kvUri), new DefaultAzureCredential());
             KeyVaultSecret secret3 = client.GetSecret("secret3");
