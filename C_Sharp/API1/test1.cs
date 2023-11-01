@@ -14,7 +14,7 @@ namespace API1
 {
     public static class test1
     {
-        private static readonly string kvUrl = "https://keybyh.vault.azure.net";
+        private static readonly string kvUrl = "https://keybyh.vault.azure.net/secrets/secret2/651eb25907564cdd91204ae0f3736822";
         private static readonly SecretClient secretClient = new SecretClient(new Uri(kvUrl), new DefaultAzureCredential());
 
         [FunctionName("test1")]
