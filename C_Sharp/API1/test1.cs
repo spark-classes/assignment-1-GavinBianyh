@@ -14,7 +14,7 @@ namespace API1
 {
     public static class test1
     {
-        private static readonly string kvUrl = Environment.GetEnvironmentVariable("keyvalue2");
+        private static readonly string kvUrl = "https://keybyh.vault.azure.net/";
         private static readonly SecretClient secretClient = new SecretClient(new Uri(kvUrl), new DefaultAzureCredential());
 
         [FunctionName("test1")]
@@ -24,11 +24,17 @@ namespace API1
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            // Fetch the secret value from Key Vault
-            KeyVaultSecret secret = await secretClient.GetSecretAsync("secret2");
-            string secretValue = secret.Value;
-
-            log.LogInformation($"secret 2 = this is: {secretValue}");
+            try
+            {
+                // Fetch the secret value from Key Vault
+                KeyVaultSecret secret = await secretClient.GetSecretAsync("keyvalue2");
+                string secretValue = secret.Value;
+                log.LogInformation($"secret 2 = this is: {secretValue}");
+            }
+            catch (Exception ex)
+            {
+                log.LogError($"Error fetching secret: {ex.Message}");
+            }
 
             string name = req.Query["name"];
 
@@ -37,11 +43,10 @@ namespace API1
             name = name ?? data?.name;
 
             string responseMessage = string.IsNullOrEmpty(name)
-                ? $"This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response. Secret Value: {secretValue}"
-                : $"Hello, {name}. This HTTP triggered function executed successfully. Secret Value: {secretValue}";
+                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
+                : $"Hello, {name}. This HTTP triggered function executed successfully.";
 
             return new OkObjectResult(responseMessage);
         }
     }
 }
-
