@@ -25,10 +25,10 @@ namespace API1
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             // Fetch the secret value from Key Vault
-            KeyVaultSecret secret = await secretClient.GetSecretAsync("secret2");
+            KeyVaultSecret secret = await secretClient.GetSecretAsync("keyvalue2");
             string secretValue = secret.Value;
 
-            log.LogInformation($"Secret Value: {secretValue}");
+            log.LogInformation($"secret 2 = this is: {secretValue}");
 
             string name = req.Query["name"];
 
