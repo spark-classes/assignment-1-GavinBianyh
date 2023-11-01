@@ -26,9 +26,6 @@ jobs:
         dotnet add C_Sharp/API1/API1.csproj package Azure.Security.KeyVault.Secrets
         dotnet add C_Sharp/API1/API1.csproj package Azure.Identity
         dotnet add C_Sharp/API1/API1.csproj package WindowsAzure.Storage
-
-      
-
     - name: Build with dotnet
       run: dotnet build C_Sharp/API1/API1.csproj --configuration Release
       
