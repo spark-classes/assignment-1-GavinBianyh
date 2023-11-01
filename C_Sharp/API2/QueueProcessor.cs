@@ -10,7 +10,7 @@ namespace API2
         [FunctionName("QueueProcessor")]
         public void Run([QueueTrigger("api1queue", Connection = "newsetting")]string myQueueItem, ILogger log)
         {
-            log.LogInformation($"C# Queue trigger function processed: {myQueueItem}");
+            log.LogInformation($"C# Queue trigger function processed: {api1queue}");
         }
     }
 }
