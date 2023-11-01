@@ -21,12 +21,8 @@ namespace API1
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            var azureServiceTokenProvider = new AzureServiceTokenProvider();
-            var keyVaultClient = new KeyVaultClient(
-                new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
-
-            var secret = await keyVaultClient.GetSecretAsync(kvSecretUri)
-                .ConfigureAwait(false);
+            var client = new SecretClient(new Uri("https://keybyh.vault.azure.net/"), new DefaultAzureCredential());
+            KeyVaultSecret secret = await client.GetSecretAsync("secret2");
 
             // Log the secret
             log.LogInformation($"Secret2 = {secret.Value}");
