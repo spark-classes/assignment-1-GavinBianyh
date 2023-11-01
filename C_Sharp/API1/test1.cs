@@ -7,17 +7,28 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Azure.Security.KeyVault.Secrets;
+using Azure.Identity;
 
 namespace API1
 {
     public static class test1
     {
+        private static readonly string kvUrl = "https://keybyh.vault.azure.net";
+        private static readonly SecretClient secretClient = new SecretClient(new Uri(kvUrl), new DefaultAzureCredential());
+
         [FunctionName("test1")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
+
+            // Fetch the secret value from Key Vault
+            KeyVaultSecret secret = await secretClient.GetSecretAsync("secret2");
+            string secretValue = secret.Value;
+
+            log.LogInformation($"Secret Value: {secretValue}");
 
             string name = req.Query["name"];
 
@@ -26,10 +37,11 @@ namespace API1
             name = name ?? data?.name;
 
             string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+                ? $"This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response. Secret Value: {secretValue}"
+                : $"Hello, {name}. This HTTP triggered function executed successfully. Secret Value: {secretValue}";
 
             return new OkObjectResult(responseMessage);
         }
     }
 }
+
