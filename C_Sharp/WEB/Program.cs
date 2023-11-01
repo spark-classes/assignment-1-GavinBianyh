@@ -47,7 +47,7 @@ public class ApiController : Controller
     [HttpGet("/api")]
     public IActionResult GetSecret()
     {
-        var secretValue = _configuration["keybyh"];
+        var secretValue = _configuration["keyvalue1"];
         return Content($"Hello, world! This is : {secretValue}");
     }
 }
