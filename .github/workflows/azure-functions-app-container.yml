@@ -16,6 +16,9 @@ jobs:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v3
 
+    - name: Clean .NET project
+      run: dotnet clean C_Sharp/API2/{API2}.csproj
+
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
       with:
