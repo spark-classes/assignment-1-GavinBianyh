@@ -14,7 +14,7 @@ namespace API1
 {
     public static class test1
     {
-        private static readonly string kvUrl = "https://keybyh.vault.azure.net/secrets/secret2/651eb25907564cdd91204ae0f3736822";
+        private static readonly string kvUrl = Environment.GetEnvironmentVariable("keyvalue2");
         private static readonly SecretClient secretClient = new SecretClient(new Uri(kvUrl), new DefaultAzureCredential());
 
         [FunctionName("test1")]
@@ -25,7 +25,7 @@ namespace API1
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             // Fetch the secret value from Key Vault
-            KeyVaultSecret secret = await secretClient.GetSecretAsync("keyvalue2");
+            KeyVaultSecret secret = await secretClient.GetSecretAsync("secret2");
             string secretValue = secret.Value;
 
             log.LogInformation($"secret 2 = this is: {secretValue}");
