@@ -1,21 +1,18 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Azure.Security.KeyVault.Secrets;
-using Azure.Identity;
+using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.Azure.KeyVault;
 
 namespace API1
 {
     public static class test1
     {
-        private static readonly string kvUrl = "https://keybyh.vault.azure.net/";
-        private static readonly SecretClient secretClient = new SecretClient(new Uri(kvUrl), new DefaultAzureCredential());
+        private static readonly string kvSecretUri = "https://keybyh.vault.azure.net/secrets/secret2/651eb25907564cdd91204ae0f3736822";
 
         [FunctionName("test1")]
         public static async Task<IActionResult> Run(
@@ -24,29 +21,17 @@ namespace API1
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            try
-            {
-                // Fetch the secret value from Key Vault
-                KeyVaultSecret secret = await secretClient.GetSecretAsync("keyvalue2");
-                string secretValue = secret.Value;
-                log.LogInformation($"secret 2 = this is: {secretValue}");
-            }
-            catch (Exception ex)
-            {
-                log.LogError($"Error fetching secret: {ex.Message}");
-            }
+            var azureServiceTokenProvider = new AzureServiceTokenProvider();
+            var keyVaultClient = new KeyVaultClient(
+                new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
 
-            string name = req.Query["name"];
+            var secret = await keyVaultClient.GetSecretAsync(kvSecretUri)
+                .ConfigureAwait(false);
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            // Log the secret
+            log.LogInformation($"Secret2 = {secret.Value}");
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            return new OkObjectResult(responseMessage);
+            return new OkObjectResult($"Secret2 = {secret.Value}");
         }
     }
 }
