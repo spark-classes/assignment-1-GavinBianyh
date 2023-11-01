@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddControllers();
 builder.Services.AddSingleton<WeatherForecastService>();
 
 var app = builder.Build();
@@ -30,24 +31,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
 
-public class ApiController : Controller
-{
-    private readonly IConfiguration _configuration;
-
-    public ApiController(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-
-    [HttpGet("/api")]
-    public IActionResult GetSecret()
-    {
-        var secretValue = _configuration["keyvalue1"];
-        return Content($"Hello, world! This is : {secretValue}");
-    }
-}
