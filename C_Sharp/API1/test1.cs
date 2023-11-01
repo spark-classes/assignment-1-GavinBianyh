@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using Azure.Security.KeyVault.Secrets;
 using Azure.Identity;
 using Azure.Storage.Queues;
-using Azure.Storage.Queues.Models;
 
 namespace API1
 {
@@ -34,12 +33,9 @@ namespace API1
             string storageConnectionString = storageConnectionStringSecret.Value;
 
             // Use the connection string to insert a message into the queue
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
-            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient(new QueueRequestOptions());
-            CloudQueue queue = queueClient.GetQueueReference("api1queue"); 
-            await queue.CreateIfNotExistsAsync();
-            CloudQueueMessage message = new CloudQueueMessage("this is test queue message");
-            await queue.AddMessageAsync(message);
+            QueueClient queueClient = new QueueClient(storageConnectionString, "api1queue");
+            await queueClient.CreateIfNotExistsAsync();
+            await queueClient.SendMessageAsync("this is a test queue message");
 
             log.LogInformation("Message added to queue.");
 
