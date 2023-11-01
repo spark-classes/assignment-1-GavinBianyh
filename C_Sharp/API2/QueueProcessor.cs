@@ -8,7 +8,7 @@ namespace API2
     public class QueueProcessor
     {
         [FunctionName("QueueProcessor")]
-        public void Run([QueueTrigger("myqueue-items", Connection = "")]string myQueueItem, ILogger log)
+        public void Run([QueueTrigger("api1queue", Connection = "storageConnectionString")] string myQueueItem, ILogger log)
         {
             log.LogInformation($"C# Queue trigger function processed: {myQueueItem}");
         }
