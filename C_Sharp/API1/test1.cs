@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Azure.Security.KeyVault.Secrets;
 using Azure.Identity;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Queue;
+using Azure.Storage.Queues;
+using Azure.Storage.Queues.Models;
 
 namespace API1
 {
