@@ -8,7 +8,6 @@ on:
       - 'C_Sharp/API2/**'
   workflow_dispatch:
 
-
 jobs:
   build-and-deploy:
    runs-on: ubuntu-latest
@@ -31,7 +30,3 @@ jobs:
         resourceGroup: 519fall2023-project-BIAN
         environmentVariables: |
           StorageQueueUrl=https://cs210032002f776443c.queue.core.windows.net/api1queue
-
-
-    
-   
