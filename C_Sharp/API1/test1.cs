@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Azure.Security.KeyVault.Secrets;
 using Azure.Identity;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Queue;
 
 namespace API1
 {
     public static class test1
     {
-        private static readonly string kvSecretUri = "https://keybyh.vault.azure.net/secrets/secret2/651eb25907564cdd91204ae0f3736822";
+        private static readonly string kvUri = "https://keybyh.vault.azure.net/";
 
         [FunctionName("test1")]
         public static async Task<IActionResult> Run(
@@ -21,13 +23,27 @@ namespace API1
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            var client = new SecretClient(new Uri("https://keybyh.vault.azure.net/"), new DefaultAzureCredential());
-            KeyVaultSecret secret = await client.GetSecretAsync("secret2");
+            var client = new SecretClient(new Uri(kvUri), new DefaultAzureCredential());
 
-            // Log the secret
+            // Retrieve the secret
+            KeyVaultSecret secret = await client.GetSecretAsync("secret2");
             log.LogInformation($"Secret2 = {secret.Value}");
 
-            return new OkObjectResult($"Secret2 = {secret.Value}");
+            // Retrieve the storage connection string
+            KeyVaultSecret storageConnectionStringSecret = await client.GetSecretAsync("storageConnectionString");
+            string storageConnectionString = storageConnectionStringSecret.Value;
+
+            // Use the connection string to insert a message into the queue
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
+            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient(new QueueRequestOptions());
+            CloudQueue queue = queueClient.GetQueueReference("api1queue"); 
+            await queue.CreateIfNotExistsAsync();
+            CloudQueueMessage message = new CloudQueueMessage("this is test queue message");
+            await queue.AddMessageAsync(message);
+
+            log.LogInformation("Message added to queue.");
+
+            return new OkObjectResult($"Secret2 = {secret.Value}; Message added to queue");
         }
     }
 }
