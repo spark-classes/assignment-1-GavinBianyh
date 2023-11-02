@@ -20,26 +20,11 @@ namespace API2
         [FunctionName("QueueProcessor")]
         public void Run([QueueTrigger("api1queue-poison", Connection = "newsetting")]string myQueueItem, ILogger log)
         {
-            // Decode the Base64 string before processing it
-            string decodedMessage = Base64Decode(myQueueItem);
-
-            log.LogInformation($"C# Queue trigger function processed: {decodedMessage}");
+            log.LogInformation($"C# Queue trigger function processed: {myQueueItem}");
 
             // Read the third secret from Azure Key Vault
             KeyVaultSecret thirdSecret = _secretClient.GetSecret("secret3");
             log.LogInformation($"Third Secret Value: {thirdSecret.Value}");
-        }
-
-        private static string Base64Encode(string plainText)
-        {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
-        }
-
-        private static string Base64Decode(string base64EncodedText)
-        {
-            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedText);
-            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
     }
 }
