@@ -2,6 +2,8 @@ using System;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using Azure.Security.KeyVault.Secrets;
+using Azure.Identity;
 
 namespace API2
 {
