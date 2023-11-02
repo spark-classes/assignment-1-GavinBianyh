@@ -24,7 +24,7 @@ namespace API2
 
             // Read the third secret from Azure Key Vault
             KeyVaultSecret thirdSecret = _secretClient.GetSecret("secret3");
-            log.LogInformation($"Third Secret Value: {secret3.Value}");
+            log.LogInformation($"Third Secret Value: {thirdSecret.Value}");
         }
     }
 }
