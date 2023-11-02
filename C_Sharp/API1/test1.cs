@@ -35,11 +35,19 @@ namespace API1
             // Use the connection string to insert a message into the queue
             QueueClient queueClient = new QueueClient(storageConnectionString, "api1queue");
             await queueClient.CreateIfNotExistsAsync();
-            await queueClient.SendMessageAsync("this is a test queue message");
+
+            string messageToBeSent = "this is a test queue message";
+            await queueClient.SendMessageAsync(Base64Encode(messageToBeSent));
 
             log.LogInformation("Message added to queue.");
 
             return new OkObjectResult($"Secret2 = {secret.Value}; Message added to queue");
+        }
+
+        private static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
         }
     }
 }
