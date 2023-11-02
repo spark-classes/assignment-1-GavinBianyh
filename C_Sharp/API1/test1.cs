@@ -13,6 +13,13 @@ namespace API1
 {
     public static class Test1
     {
+         private static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+
+        
         private static readonly string kvUri = "https://keybyh.vault.azure.net/";
 
         [FunctionName("test1")]
@@ -62,10 +69,5 @@ namespace API1
             }
         }
 
-        //private static string Base64Encode(string plainText)
-        //{
-        //    var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-        //    return System.Convert.ToBase64String(plainTextBytes);
-        //}
     }
 }
