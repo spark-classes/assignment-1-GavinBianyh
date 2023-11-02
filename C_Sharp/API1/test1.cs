@@ -11,7 +11,7 @@ using Azure.Storage.Queues;
 
 namespace API1
 {
-    public static class test1
+    public static class Test1
     {
         private static readonly string kvUri = "https://keybyh.vault.azure.net/";
 
@@ -22,32 +22,50 @@ namespace API1
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            var client = new SecretClient(new Uri(kvUri), new DefaultAzureCredential());
+            try
+            {
+                var client = new SecretClient(new Uri(kvUri), new DefaultAzureCredential());
 
-            // Retrieve the secret
-            KeyVaultSecret secret = await client.GetSecretAsync("secret2");
-            log.LogInformation($"Secret2 = {secret.Value}");
+                // Retrieve the secret
+                KeyVaultSecret secret = await client.GetSecretAsync("secret2");
+                log.LogInformation($"Secret2 = {secret.Value}");
 
-            // Retrieve the storage connection string
-            KeyVaultSecret storageConnectionStringSecret = await client.GetSecretAsync("storageConnectionString");
-            string storageConnectionString = storageConnectionStringSecret.Value;
+                // Retrieve the storage connection string
+                KeyVaultSecret storageConnectionStringSecret = await client.GetSecretAsync("storageConnectionString");
+                string storageConnectionString = storageConnectionStringSecret.Value;
 
-            // Use the connection string to insert a message into the queue
-            QueueClient queueClient = new QueueClient(storageConnectionString, "api1queue");
-            await queueClient.CreateIfNotExistsAsync();
+                // Use the connection string to insert a message into the queue
+                QueueClient queueClient = new QueueClient(storageConnectionString, "api1queue");
+                await queueClient.CreateIfNotExistsAsync();
 
-            string messageToBeSent = "this is a test queue message";
-            await queueClient.SendMessageAsync(Base64Encode(messageToBeSent));
+                string messageToBeSent = "this is a test queue message";
+                await queueClient.SendMessageAsync(Base64Encode(messageToBeSent));
 
-            log.LogInformation("Message added to queue.");
+                log.LogInformation("Message added to queue.");
 
-            return new OkObjectResult($"Secret2 = {secret.Value}; Message added to queue");
+                // Return a successful response
+                return new OkObjectResult($"Secret2 = {secret.Value}; Message added to queue");
+            }
+            catch (Exception e)
+            {
+                // Log the error and handle it accordingly
+                log.LogError($"Exception thrown: {e.Message}");
+
+                // Determine the status code to return
+                var statusCode = e is UnauthorizedAccessException ? StatusCodes.Status403Forbidden : StatusCodes.Status500InternalServerError;
+
+                // Return an error response
+                return new ObjectResult(new { error = e.Message, stackTrace = e.StackTrace })
+                {
+                    StatusCode = statusCode
+                };
+            }
         }
 
-        private static string Base64Encode(string plainText)
-        {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
-        }
+        //private static string Base64Encode(string plainText)
+        //{
+        //    var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+        //    return System.Convert.ToBase64String(plainTextBytes);
+        //}
     }
 }
